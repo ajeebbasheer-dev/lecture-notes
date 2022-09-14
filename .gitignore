@@ -1,1 +1,7 @@
-sphinx/build/
+# A slash at the beginning of a pattern is relative to the directory where the .gitignore resides
+# If the pattern doesn’t start with a slash, it matches files and directories in any directory or subdirectory.
+# If the pattern ends with a slash, it matches only directories. All of its files and subdirectories are also ignored.
+# To see the pattern is ignored, try `git status` command
+
+# ignore entire build folder at the root.
+build/
