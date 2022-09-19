@@ -1,0 +1,10 @@
+@import url("default.css");
+
+button.toggle-button {
+  color: red;
+}
+
+/* ...with content block toggle buttons */
+.toggle-button summary {
+  color: red;
+}

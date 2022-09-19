@@ -5,3 +5,4 @@
 
 # ignore entire build folder at the root.
 build/
+.DS_Store

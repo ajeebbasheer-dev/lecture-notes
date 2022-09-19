@@ -630,10 +630,15 @@ If we flip the values on the 2 wires, the result is a system that has 2 stable c
   :width: 300
   :align: center
 
-Settable storage element
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Settable storage element (D Latch)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 We can use a 2-to-1 MUX to build a storage element. Output of MUX serves as the state output of the memory component.
+
+.. image:: _images/computation_structures/047_dlatch.png
+  :width: 300
+  :align: center
+
 
 - Output will connect to the input D0 as well.
 - D1 data input is the data input of memory component.
@@ -641,4 +646,52 @@ We can use a 2-to-1 MUX to build a storage element. Output of MUX serves as the 
 - When the gate input is LOW, the MUX's output is looped back through MUX through the D0 forming the bi-stable positive feedback loop.
 - Note our circuit has a cycle, so it no longer qualifies as a combinational circuit.
 - When the gate's input is high, the MUX's output is determined by the value of D1 input. 
-- To load new data: we set the gate input HIGH for long enough for the Q output to become valid and stable.
+- **To load new data**: we set the gate input HIGH for long enough for the Q output to become valid and stable.
+  - When G is 1, Q output follows the D input.
+  - While G is high, any changes in the D input will be reflected as changes in the Q output.
+  - the timing being determined by the tpd of the MUX.
+  - then **we can set the gate input low to switch the memory component to memory mode**. The stable Q value is maintained indefinitely by the positive feedback loop as shown in the first 2 rows of truth table.
+- This memory component is called **D-Latch (or simply latch)** 
+
+.. image:: _images/computation_structures/048_dlatch.png
+  :width: 300
+  :align: center
+
+.. important::
+  - **To Load new data**: Set Gate input HIGH, Provide input on D.
+  - **To Store loaded data indefinitely**: Set Gate input LOW. This will form a positive feedback loop.
+
+
+(Edge-Triggered)D-Register
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+In D-Latch, the time period when G is set HIGH is important. If we set it high for long, then the new state information has a chance to propagate around the loop.
+
+**Similar to a lane of cars waiting on a tool gate**: Gate should be opened only till the first car is through and should be closed before the the car behind it comes forward.
+
+- This is exactly the issue with D-Latch. **How do we ensure only one car makes it through the gate**?
+- Solution: **Use 2 gates**.
+
+.. image:: _images/computation_structures/049_dregister.png
+  :width: 300
+  :align: center
+
+Apply the same solution on memory component.
+
+- Use 2 back to back latches.
+
+.. image:: _images/computation_structures/050_dregister.png
+  :width: 300
+  :align: center
+
+- Sometimes this is called **FlipFlop**.
+
+Finite State Machines
+======================
+
+.. important:: 
+  - sequential logic = Combinational logic + Memory components
+  - Combinational Logic: Acyclic, Can be enumerated by a 2\ :sup:`k+m` rows and k+n output columns.
+
+
+In the last chapter, we developed sequential logic (co)

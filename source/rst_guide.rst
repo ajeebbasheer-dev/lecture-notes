@@ -80,12 +80,35 @@ Notes::
 
     .. note::
 
+
 Warnings::
 
     .. warning::
+
+
+::
+    
+    .. hlist::
+       :columns: 3
+
+       * A list of
+       * short items
+       * that should be
+       * displayed
+       * horizontally
+
 
 Tips
 ------
 
 - Superscript: E = mc\ :sup:`2`.
 - Subscript: H\ :sub:`2`\ 0.
+
+Substitutions
+^^^^^^^^^^^^^^^
+
+::
+
+    .. |Product| replace:: Apple
+
+    My phone is built by |Product|
