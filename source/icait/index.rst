@@ -7,4 +7,6 @@ Lecture Notes
    :caption: Contents:
 
    programming/c/index
+   coa/index
+   digital_logic/index
 

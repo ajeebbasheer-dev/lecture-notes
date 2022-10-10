@@ -8,3 +8,4 @@ Python Notes
 
    concepts
    falcon
+   sqlalchemy_notes

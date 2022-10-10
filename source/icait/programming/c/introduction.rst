@@ -62,6 +62,12 @@ Fundamentals in C
 - **Data Types**: int, char, float, double etc. 
 - **Declaration, Initialization and Assignment**
 
+.. important::
+	- **Declaration**: When we declare a variable no space is reserved for it.
+	- **Definition**: When we define it space gets reserved for it in memory
+	- A variable can be declared several times but can be defined only once.
+
+
 This will work::
 
     int a, b, c, d ;
@@ -245,3 +251,10 @@ This will not::
         Enter string: lorem
         The string entered is: lorem
 
+
+Compiling
+===========
+
+.. image:: _images/introduction/compile_process.png
+  :width: 800
+  :align: center
