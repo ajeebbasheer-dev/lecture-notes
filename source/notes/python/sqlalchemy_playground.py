@@ -54,7 +54,7 @@ class Session:
         self._session.remove()
 
 
-def get_entry_if_exists(session, model, entry):
+def _get_entry(session, model, entry):
     primary_keys = get_primary_keys(model)
     query = session.query(model)
     for key in primary_keys:
@@ -62,12 +62,24 @@ def get_entry_if_exists(session, model, entry):
         if result:
             return result
 
+def _clear(session, model, entry):
+    primary_keys = get_primary_keys(model)
+    query = session.query(model)
+    for key in primary_keys:
+        result = query.filter(getattr(model, key) == entry.get(key)).first()
+        if result:
+            session.delete(result)
+
+def _clear_all(model, entries):
+    with Session() as session:
+        for entry in entries:
+            _clear(session, model, entry)
+        session.commit()
+
 def add_initial_entries(model, entries):
     with Session() as session:
         for entry in entries:
-            item = get_entry_if_exists(session, model, entry)
-            if not item:
-                session.add(model(**entry))
+            session.add(model(**entry))
         session.commit()
 
 
@@ -79,38 +91,115 @@ def get_primary_keys(model):
 
 
 def _print_new_dirty_deleted(session, msg):
-    print(f"\n--- {msg} ---")
-    print(f"\n\tsession.new: {session.new}")
-    print(f"\n\tsession.dirty: {session.dirty}")
-    print(f"\n\tsession.deleted: {session.deleted}")
+    print(f"\n{msg}:")
+    print(f"\tsession.new: {session.new}, session.dirty: {session.dirty}, "
+          f"session.deleted: {session.deleted}")
+
 
 def test_new_dirty_deleted(model):
-    kwargs = {'id': '4321', 'reg_no': 3214 ,'name': 'lexus'}
+    kwargs01 = {'id': '4321', 'reg_no': 3214 ,'name': 'lexus'}
+    kwargs02 = {'id': '3213', 'reg_no': 1432 ,'name': 'new lexus'}
     with Session() as session:
+        _clear_all(model, [kwargs01, kwargs02])
         _print_new_dirty_deleted(session, "Before adding a new entry")
-        entry = get_entry_if_exists(session, model, kwargs)
-        if entry:
-            session.delete(entry)
-            session.commit()
-            _print_new_dirty_deleted(session, "After deleting existing entry")
-        session.add(model(**kwargs))
-        _print_new_dirty_deleted(session, "After adding a new entry")
+        session.add(model(**kwargs01))
+        _print_new_dirty_deleted(session, "After adding entry #01")
+        session.add(model(**kwargs02))
+        _print_new_dirty_deleted(session, "After adding entry #02")
         session.commit()
-        _print_new_dirty_deleted(session, "After committing add")
-        entry = get_entry_if_exists(session, model, kwargs)
-        _print_new_dirty_deleted(session, "After getting the added entry")
-        entry.name = "Lexus 125"
-        session.add(entry)
-        _print_new_dirty_deleted(session, "After updating new entry")
+        _print_new_dirty_deleted(session, "After commit")
+        entry01 = _get_entry(session, model, kwargs01)
+        entry02 = _get_entry(session, model, kwargs02)
+        _print_new_dirty_deleted(session, "After getting entry #01")
+        entry01.name = "Lexus 125"
+        session.add(entry01)
+        entry02.name = "New Lexus 125"
+        session.add(entry02)
+        _print_new_dirty_deleted(session, "After updating entry #01")
         session.commit()
-        _print_new_dirty_deleted(session, "After committing update")
-        entry = get_entry_if_exists(session, model, kwargs)
-        _print_new_dirty_deleted(session, "After getting the updated entry")
+        _print_new_dirty_deleted(session, "After commit")
+        entry = _get_entry(session, model, kwargs01)
+        _print_new_dirty_deleted(session, "After getting entry #01")
         session.delete(entry)
-        _print_new_dirty_deleted(session, "After deleting new entry")
-        _print_new_dirty_deleted(session, "After committing delete")
+        entry = _get_entry(session, model, kwargs02)
+        # a query will implicitly flush changes to the db. So, the  above delete
+        # entry will no longer exists in session.deleted
+        _print_new_dirty_deleted(session, "After getting entry #02")
+        session.delete(entry)
+        _print_new_dirty_deleted(session, "After deleting entry #01")
+        _print_new_dirty_deleted(session, "After commit")
 
 
+def test_query_and_flush(model):
+    kwargs01 = {'id': '4321', 'reg_no': 3214 ,'name': 'lexus'}
+    kwargs02 = {'id': '3213', 'reg_no': 1432 ,'name': 'new lexus'}
+    with Session() as session:
+        _clear_all(model, [kwargs01, kwargs02])
+        session.add(model(**kwargs01))
+        session.add(model(**kwargs02))
+        # 2 items must be there in the session.new.
+        print(f"\n{session.new}") # IdentitySet([Vehicle(_sa_instance_state=<sqlalchemy.orm.state.InstanceState object at 0x10e217370>, id='4321', reg_no=3214, name='lexus'), Vehicle(_sa_instance_state=<sqlalchemy.orm.state.InstanceState object at 0x10e2bcf40>, id='3213', reg_no=1432, name='new lexus')])
+        # mysql> select * from vehicle;
+        # Empty set (0.00 sec)
+        session.flush() # means, communicated to db and db maintains them as pending operations in a transaction.
+        # mysql> select * from vehicle;
+        # Empty set (0.00 sec)
+        print(f"\n{session.new}") # IdentitySet([])
+        # not that as soon as session is flushed, session.new is also gone.
+        # This doesn't mean, data is gone. let's try to get data.
+        entry01 = _get_entry(session, model, kwargs01)
+        print(f"{entry01.id} {entry01.name}") # 4321 lexus
+        session.commit()
+        print(f"{entry01.id} {entry01.name}") # 4321 lexus !! YES YOU CAN STILL QUERY. COMMIT JUST COMMIT THE TRANSACTION.
+
+        _clear_all(model, [kwargs01, kwargs02])
+        session.add(model(**kwargs01))
+        session.add(model(**kwargs02))
+        print(f"\n{session.new}")
+        entry01 = _get_entry(session, model, kwargs01)
+        # at this point, session.new will not contain anything as a 
+        # session.query will implicitly flush changes to db.
+        print(f"\n{session.new}")
+
+
+def test_expunge(model):
+    kwargs01 = {'id': '4321', 'reg_no': 3214 ,'name': 'lexus'}
+    kwargs02 = {'id': '3213', 'reg_no': 1432 ,'name': 'Toyota'}
+    kwargs03 = {'id': '9899', 'reg_no': 3322 ,'name': 'Audi'}
+    with Session() as session:
+        _clear_all(model, [kwargs01, kwargs02])
+        session.add(model(**kwargs01))
+        session.add(model(**kwargs02))
+        _print_new_dirty_deleted(session, "Before expunge") # session.new: IdentitySet([Vehicle(_sa_instance_state=<sqlalchemy.orm.state.InstanceState object at 0x108805370>, id='4321', reg_no=3214, name='lexus'), Vehicle(_sa_instance_state=<sqlalchemy.orm.state.InstanceState object at 0x1088aaf40>, id='3213', reg_no=1432, name='Toyota')])session.dirty: IdentitySet([]), session.deleted: IdentitySet([])
+        session.expunge_all()
+        _print_new_dirty_deleted(session, "After expunge") # session.new: IdentitySet([]), session.dirty: IdentitySet([]), session.deleted: IdentitySet([])
+        session.commit() # nothing to commit to db
+        # mysql> select * from vehicle;
+        # Empty set (0.00 sec)
+        session.add(model(**kwargs01))
+        session.add(model(**kwargs02))
+        session.commit()
+        entry01 = _get_entry(session, model, kwargs01)
+        entry02 = _get_entry(session, model, kwargs02)
+        entry01.name = "new-lexus"
+        entry02.name = "new-toyota"
+        session.add(entry01)
+        session.add(entry02)
+        _print_new_dirty_deleted(session, "Before expunge") # session.dirty: IdentitySet([Vehicle(_sa_instance_state=<sqlalchemy.orm.state.InstanceState object at 0x103425a90>, reg_no='3214', name='new-lexus', id='4321'), Vehicle(_sa_instance_state=<sqlalchemy.orm.state.InstanceState object at 0x103425040>, reg_no='1432', name='new-toyota', id='3213')])
+        session.expunge(entry01)
+        _print_new_dirty_deleted(session, "After expunge") #session.dirty: IdentitySet([Vehicle(_sa_instance_state=<sqlalchemy.orm.state.InstanceState object at 0x103425040>, reg_no='1432', name='new-toyota', id='3213')])
+        session.commit()
+        # mysql> select * from vehicle;
+        # +------+--------+------------+
+        # | id   | reg_no | name       |
+        # +------+--------+------------+
+        # | 3213 | 1432   | new-toyota |
+        # | 4321 | 3214   | lexus      |
+        # +------+--------+------------+
+        # 2 rows in set (0.00 sec)
+
+
+        
 
 if __name__ == '__main__':
     kwargs =[
@@ -119,5 +208,8 @@ if __name__ == '__main__':
         {'id': '9893', 'reg_no': 9043 ,'name': 'i10'},
         {'id': '3821', 'reg_no': 8942 ,'name': 'nano'}
     ]
-    add_initial_entries(Vehicle, kwargs)
-    test_new_dirty_deleted(Vehicle)
+    _clear_all(Vehicle, kwargs)
+    # add_initial_entries(Vehicle, kwargs)
+    # test_new_dirty_deleted(Vehicle)
+    # test_query_and_flush(Vehicle)
+    test_expunge(Vehicle)

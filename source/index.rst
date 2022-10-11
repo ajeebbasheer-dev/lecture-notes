@@ -17,6 +17,7 @@ Notebook
    notes/devops/index
    notes/computer_science/index
    icait/index
+   courses/index
    rst_guide
    readme_sphinx
 
