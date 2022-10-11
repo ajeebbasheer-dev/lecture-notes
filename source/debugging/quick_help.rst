@@ -38,3 +38,10 @@ Watch the following lines to see which key is used for authentication::
 To use a specific key::
 
     git clone git@<preferred_hostname_in_ssh_config_file>:ajeebbasheer-dev/sphinx.git 
+
+To see PATH and other env variables in Windows
+=========================================l======
+
+Type `SET` in cmd to see all env variables. 
+
+In Powershell use `Get-ChildItem Env:` too the env variables. However, if the PATH is long, it may show only first few characters.
