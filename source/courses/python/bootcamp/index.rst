@@ -6,6 +6,9 @@ Complete Python Bootcamp
    :maxdepth: 3
    :caption: Contents:
 
-   001_intro
-   002_datatypes
+   intro
+   datatypes
+   input_output
+   operators
+   control_structures
 

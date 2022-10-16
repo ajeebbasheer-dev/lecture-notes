@@ -685,3 +685,283 @@ dir() for more
 
 	>>> dir(num_list)
 	['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__init_subclass__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
+
+
+Dictionaries
+=============
+
+Unordered mapping for storing objects.
+
+- Uses `Key:Value` pairs.
+- Use curly braces and colons to signify the keys and their associated values.
+
+.. important:: When to use a List? When to choose a dictionary?
+
+	- **Dictionaries**: Objects retrieved by **key name**. Unorderd.
+	- **List**: Objects retrieved by **location**. Ordered sequence can be indexed or sliced.
+
+::
+
+	>>> my_address = {'name': 'john', 'city': 'Calicut', 'street': 'link road'}
+	>>> my_address
+	{'name': 'john', 'city': 'Calicut', 'street': 'link road'}
+	
+To retrieve a key value::
+
+	>>> my_address['city']
+	'Calicut'
+
+What happens if we try to get a non-existing key?::
+
+	>>> my_address['foobar']
+	Traceback (most recent call last):
+	  File "<stdin>", line 1, in <module>
+	KeyError: 'foobar'
+
+To avoid this error, we can use get() method::
+
+	>>> my_address.get('foobar')
+	>>> 
+	>>> my_address.get('foobar', 'Unknown')
+	'Unknown'
+	>>> my_address.get('street', 'Unknown')
+	'link road'
+
+	>>> tea_prices = {'lemon': 12, 'ginger': 15, 'masala': 13}
+	>>> tea_prices.get('lemon', 10)
+	12
+	>>> tea_prices.get('blacktea', 10)
+	10
+
+Dictionary can be nested::
+
+	>>> prices = {'coffee': 15, 'tea': {'lemon': 12, 'ginger': 13}}
+    >>> prices['tea']['lemon']
+    12
+
+
+The keys() and values() methods 
+---------------------------------
+
+::
+
+	>>> prices.keys()
+	dict_keys(['coffee', 'tea'])
+	>>> prices.values()
+	dict_values([15, {'lemon': 12, 'ginger': 13}])
+	>>> 
+
+To get the pairings: items()
+-----------------------------
+
+::
+
+	>>> prices.items()
+	dict_items([('coffee', 15), ('tea', {'lemon': 12, 'ginger': 13})])
+
+
+Tuples
+========
+
+Very similar to lists but **Immutable**.
+
+- The element inside a tuple can't be reassigned.
+- Uses parenthesis and commas. (1, 3, 5)
+- len(), indexing and reverse indexing works similar to lists.
+- When to use?: if you want all features of a list but need to ensure data integrity. i.e. you want to ensure that elements will not get reassigned later in code.
+
+::
+
+	>>> items = (1,2,3)
+	>>> items1 = (1,2,3)
+	>>> items2 = [1,2,3]
+	>>> 
+	>>> type(items1)
+	<class 'tuple'>
+	>>> type(items2)
+	<class 'list'>
+	>>> len(items1)
+	3
+	>>> items1[-1]
+	3
+
+
+count() and index() methods
+-----------------------------
+
+t.count(x): returns count of x in the tuple t.
+t.index(x): index of x in tuple x. if multiple entries, then returns the index of first occurrence.
+
+::
+
+	>>> my_tuple = (1, 2, 3, 4, 3, 4, 5, 3, 1)
+    >>> my_tuple.count(3)
+    3
+    >>> my_tuple.count(1)
+    2
+    >>> my_tuple.index(3)
+    2
+
+Immmutability
+--------------
+
+::
+
+	>>> my_list = ['x', 'y', 'z']
+	>>> my_list[0] = "NEW VALUE"
+	>>> my_list
+	['NEW VALUE', 'y', 'z']
+
+This will not work in tuples::
+
+	>>> my_tuple = ('x', 'y', 'z')
+	>>> my_tuple[0] = "NEW VALUE"
+	Traceback (most recent call last):
+	  File "<stdin>", line 1, in <module>
+	TypeError: 'tuple' object does not support item assignment
+
+
+Sets 
+=====
+
+Unorderd collection of **Unique** elements. There cannot be duplicate elements in a set.
+
+Beware that we are not creating empty dict for a set::
+
+	>>> my_set = {}
+	>>> type(my_set)
+	<class 'dict'> # OOPS!!!
+
+	>>> my_set = set()
+	>>> type(my_set)
+	<class 'set'>
+
+::
+
+	>>> my_set.add(10)
+	>>> my_set
+	{10}
+	>>> my_set.add(20)
+	>>> my_set
+	{10, 20}
+
+You can't add same element again::
+
+	>>> my_set.add(20)
+	>>> my_set
+	{10, 20}
+
+.. important:: We can convert list/tuples to set() to removed duplicate elements
+
+	::
+
+		>>> my_list = [5,5,5,5, 6, 7, 6, 5, 5, 5, 7]
+        >>> my_tuple = (5,5,5,5, 6, 7, 6, 5, 5, 5, 7)
+        >>> 
+        >>> my_list
+        [5, 5, 5, 5, 6, 7, 6, 5, 5, 5, 7]
+        >>> my_tuple
+        (5, 5, 5, 5, 6, 7, 6, 5, 5, 5, 7)
+        >>> 
+        >>> unique_list = set(my_list)
+        >>> unique_list
+        {5, 6, 7}
+        >>> unique_tuple = set(my_tuple)
+        >>> unique_tuple
+        {5, 6, 7}
+        >>> 
+
+
+- We can do any set operation with set datatype.
+
+::
+
+	>>> my_set
+    {10, 20}
+    >>> new_set 
+    {40, 20, 30}
+    >>> my_set.union(new_set)
+    {20, 40, 10, 30}
+    >>> my_set.intersection(new_set)
+    {20}
+    >>> 
+
+
+Booleans
+=========
+
+Booelan values in python to indicate True and False.
+
+::
+
+	>>> type(True)
+	<class 'bool'>
+	>>> type(False)
+	<class 'bool'>
+
+	>>> 1 > 20
+	False
+	>>> 1 < 20
+	True
+
+
+Make sure the T and F are caps::
+
+	>>> True
+    True
+    >>> False
+    False
+    >>> true
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    NameError: name 'true' is not defined
+    >>> false
+    Traceback (most recent call last):
+      File "<stdin>", line 1, in <module>
+    NameError: name 'false' is not defined
+    >>> 
+
+
+Truthy and Falsy 
+----------------
+
+- Values that evaluate to False are considered Falsy.
+	- Empty lists []
+	- Empty tuples ()
+	- Empty dictionaries {}
+	- Empty sets set()
+	- Empty strings ""
+	- Zero of any numeric type including complex types(0, 0.0, 0j)
+	- Empty ranges range(0)
+	- Constants like None, False
+- Values that evaluate to True are considered Truthy
+	- By default, an object is considered true.
+	- Non-empty sequences or collections (lists, tuples, strings, dictionaries, sets).
+	- All numeric non-zero values.
+	- Constants like True
+- They can use in conditional statatements like if, while etc.
+
+
+Bool()
+-------
+
+To evaluate a expression to boolean::
+
+	>>> bool([])
+	False
+	>>> bool(0)
+	False
+	>>> bool(0.0)
+	False
+	>>> bool(0j)
+	False
+	>>> bool(1.2)
+	True
+	>>> bool(111)
+	True
+	>>> bool(None)
+	False
+	>>> bool("")
+	False
+	>>> bool("Hi")
+	True
