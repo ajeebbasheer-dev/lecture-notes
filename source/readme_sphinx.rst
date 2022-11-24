@@ -308,6 +308,15 @@ Run the build
 	The HTML pages are in build.
 
 
+To Build sphinx in windows
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+::
+
+	cd C:\Users\ajeeb\OneDrive\dev\sphinx-doc
+	C:\Users\ajeeb\envs\sphinx\Scripts\activate
+	sphinx-build -b html C:\Users\ajeeb\OneDrive\dev\sphinx-doc\source C:\Users\ajeeb\Documents\build
+
 Files created
 ^^^^^^^^^^^^^^^
 

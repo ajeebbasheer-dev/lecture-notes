@@ -7,6 +7,7 @@ Topics
    :caption: Contents:
 
    git
+   windows
 
 Indices and tables
 ==================

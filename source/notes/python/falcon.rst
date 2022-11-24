@@ -27,8 +27,8 @@ Simple Falcon App
             }
             resp.body = json.dumps(content)
 
-    api = falcon.API()
-    api.add_route('/test', ObjRequestClass())
+    app = falcon.API()
+    app.add_route('/test', ObjRequestClass())
 
 
 Run falcon app using WSGI web servers
@@ -41,7 +41,7 @@ Install Gunicorn in venv: `pip install gunicorn`
     
 ::
 
-    $ gunicorn falcon_test:api
+    $ gunicorn falcon_test:app
     [2022-09-04 10:48:22 +0530] [77099] [INFO] Starting gunicorn 20.1.0
     [2022-09-04 10:48:22 +0530] [77099] [INFO] Listening at: http://127.0.0.1:8000 (77099)
     [2022-09-04 10:48:22 +0530] [77099] [INFO] Using worker: sync
@@ -60,4 +60,6 @@ GET API
 
 Using uWSGI
 ------------
+
+TBD
 

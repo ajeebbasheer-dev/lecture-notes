@@ -73,7 +73,7 @@ if, if-else and else if
 Ternary operator
 -----------------
 
-Syntax: `[on_true] if [expression] else [on_false] `
+Syntax: `[on_true] if [expression] else [on_false]`
 
 ::
 
@@ -418,7 +418,7 @@ break statement
     5
 
 continue statement
-----------------
+--------------------
 
 ::
 

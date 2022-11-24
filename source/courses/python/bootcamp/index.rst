@@ -12,4 +12,6 @@ Complete Python Bootcamp
    operators
    control_structures
    comprehensions
+   methods_and_functions
+   regex
 

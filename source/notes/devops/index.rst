@@ -6,5 +6,7 @@ Devops
    :maxdepth: 3
    :caption: Contents:
 
+   docker
    docker_swarm_and_kubernetes/index
+   rabbitmq
 

@@ -23,6 +23,13 @@ Create a file::
 
     C:\Users\ajeeb> code init.cmd
 
+code init.cmd::
+
+    @echo off
+    doskey sphinx-dir=cd C:\Users\ajeeb\OneDrive\dev\sphinx-doc
+    doskey sphinx-env=C:\Users\ajeeb\envs\sphinx\Scripts\activate
+    doskey sphinx-build=sphinx-build -b html C:\Users\ajeeb\OneDrive\dev\sphinx-doc\source C:\Users\ajeeb\Documents\build
+
 Add this to registry::
 
     C:\Users\ajeeb>reg add "HKCU\Software\Microsoft\Command Processor" /v AutoRun /t REG_EXPAND_SZ /d "%"USERPROFILE"%\init.cmd" /f
