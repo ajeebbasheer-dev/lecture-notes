@@ -8,16 +8,14 @@ Notebook
 =========
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 2
    :caption: Contents:
 
    debugging/index
-   notes/python/index
-   notes/topics/index
-   notes/devops/index
-   notes/computer_science/index
-   icait/index
-   courses/index
+   devops/index
+   theory/index
+   python/index
+   topics/index
    rst_guide
    readme_sphinx
 

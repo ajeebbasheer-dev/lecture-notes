@@ -4,11 +4,29 @@ Readme-Sphinx
 
 .. sectnum::
 
-.. contents::
-
+.. contents:
 
 Frequently Used Commands
 =========================
+
+Compile and build [init.cmd]::
+
+    @echo off
+    doskey sphinx-dir=cd C:\Users\ajeeb\OneDrive\dev\sphinx-doc
+    doskey sphinx-env=C:\Users\ajeeb\envs\sphinx\Scripts\activate
+    doskey sphinx-build=sphinx-build -b html C:\Users\ajeeb\OneDrive\dev\sphinx-doc\source C:\Users\ajeeb\Documents\build
+
+Add this to registry::
+
+    C:\Users\ajeeb>reg add "HKCU\Software\Microsoft\Command Processor" /v AutoRun /t REG_EXPAND_SZ /d "%"USERPROFILE"%\init.cmd" /f
+    The operation completed successfully.
+
+To Unregister::
+
+    C:\Users\ajeeb\OneDrive\dev\sphinx-doc>reg delete "HKCU\Software\Microsoft\Command Processor" /v AutoRun
+    Delete the registry value AutoRun (Yes/No)? Yes
+    The operation completed successfully.
+
 
 ::
 
