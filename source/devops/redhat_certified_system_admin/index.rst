@@ -8,3 +8,4 @@ Redhat Certified System Admin
    getting_started
    file_management
    user_management
+   the_bash_shell

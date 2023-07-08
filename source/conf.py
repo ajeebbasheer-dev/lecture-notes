@@ -35,6 +35,7 @@ exclude_patterns = []
 
 html_theme = 'alabaster'
 html_static_path = ['_static']
+# html_css_files = ['css/s4defs-roles.css']
 
 # sphinx_togglebutton configs
 # sphinx_togglebutton_selector = ".toggle-this-element, #my-special-id"
@@ -43,3 +44,8 @@ togglebutton_hint_hide = ""
 
 def setup(app):
     app.add_css_file('custom.css')
+
+#  rst_prolog = """
+#  .. include:: <s5defs.txt>
+
+#  """

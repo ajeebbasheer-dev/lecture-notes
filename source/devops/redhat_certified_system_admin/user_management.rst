@@ -138,3 +138,27 @@ To set password aging, use **chage**::
     Minimum number of days between password change          : 7
     Maximum number of days between password change          : 28
     Number of days of warning before password expires       : 5
+
+
+The `su`, `su -` and `sudo`
+=============================
+
+2 can carry out tasks that requires special previlages in 2 ways:
+
+1. Substitute user: switch the user who has previlages to execute a task.
+
+    - `su`: without executing startup scripts(which setup the environment).
+    - `su -`: by executing startup scripts.
+
+::
+
+    [root@localhost ~]# su user100
+    [user100@localhost root]$ whoami
+    user100
+    [user100@localhost root]$ logname  // who really am I.
+    root
+
+2. Superuser: If the user is in `/etc/sudoers` file, then we can use sudo command to do admin tasks.
+
+
+

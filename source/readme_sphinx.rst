@@ -11,6 +11,12 @@ Frequently Used Commands
 
 Compile and build [init.cmd]::
 
+	cd C:\Users\ajeeb\OneDrive\dev\sphinx-doc
+	C:\Users\ajeeb\envs\sphinx\Scripts\activate
+	sphinx-build -b html C:\Users\ajeeb\OneDrive\dev\sphinx-doc\source C:\Users\ajeeb\Documents\build
+
+or::
+
     @echo off
     doskey sphinx-dir=cd C:\Users\ajeeb\OneDrive\dev\sphinx-doc
     doskey sphinx-env=C:\Users\ajeeb\envs\sphinx\Scripts\activate
