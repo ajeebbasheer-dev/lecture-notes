@@ -8,7 +8,6 @@ Python
 
    bootcamp/index
    webscraping/index
-   falcon/index
    sqlalchemy/index
    wsgi
 
